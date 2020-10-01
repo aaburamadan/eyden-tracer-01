@@ -31,6 +31,7 @@ public:
 	virtual bool intersect(Ray& ray) const override
 	{
 		// --- PUT YOUR CODE HERE ---
+		
 		return false;
 	}
 

@@ -25,7 +25,7 @@ Mat RenderFrame(ICamera& camera)
 		for (int x = 0; x < img.cols; x++) {
 			
 			// Initialize your ray here
-			
+			camera.InitRay(ray, x,  y);
 			// --- PUT YOUR CODE HERE ---
 			
 			Vec3f col = RGB(0, 0, 0); // background color
@@ -36,6 +36,7 @@ Mat RenderFrame(ICamera& camera)
 			 */
 			
 			 // --- PUT YOUR CODE HERE ---
+			
 			
 			img.at<Vec3f>(y, x) = col; // store pixel color
 		}

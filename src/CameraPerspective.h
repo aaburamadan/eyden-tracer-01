@@ -29,12 +29,54 @@ public:
 		, m_up(up)
 	{
 		// --- PUT YOUR CODE HERE ---
+		m_zAxis = normalize(dir);
+		m_xAxis = normalize(m_zAxis.cross(up));
+		m_yAxis = normalize(m_zAxis.cross(m_xAxis));
+		m_focus = 1 / tan((Pif * angle) / 180);
 	}
 	virtual ~CCameraPerspective(void) = default;
 
 	virtual void InitRay(Ray& ray, int x, int y) override
 	{
 		// --- PUT YOUR CODE HERE ---
+		/*for (int y = 0; y < getResolution().height; y++)
+			for (int x = 0; x < getResolution().width; x++)
+			{
+				//Normalized device coordinates 0,1
+				//+0.5 to center of pixel
+				float ndcx= (x + 0.5) / getResolution().width;
+				float ndcy= (y + 0.5) / getResolution().height;
+				//Screen space coordinates -1, 1
+				float sscx= 2 * ndcx-1 ;  
+				float sscy= 2 * ndcy-1 ;
+				//Generate direction
+				float d = sscx*m_xAxis + sscy*m_yAxis + m_focus;
+				//normalise
+				d = d / |d|;
+				//ray tracing and color assignment
+				color= trace_ray(m_pos,d);
+				img(y, x) = color;
+			}*/
+		//~~~~~~~~~~~~~~~~~
+		Size res= getResolution();
+
+		// Normalized device coordinates in [0, 1]
+		float ndcx= static_cast<float>(x) / getResolution().width;
+		float ndcy= static_cast<float>(y) / getResolution().height;
+
+		// Screen-space coordinates in [-1, 1]
+		float sscx= 2 * ndcx - 1;
+		//float sscy = 2 * ndcy - 1;//can be better
+		float sscy= 1- (2*ndcy) ;//new implementation
+
+		// Define Camera coordinate system
+		Vec3f zAxis= m_dir;
+		Vec3f xAxis= normalize(zAxis.cross(m_up));
+		Vec3f yAxis= normalize(zAxis.cross(xAxis));
+
+		ray.org= m_pos;
+		ray.dir= normalize(getAspectRatio() * sscx * xAxis + sscy * yAxis + m_focus * zAxis);
+		ray.t= std::numeric_limits<float>::infinity();//hit distance
 	}
 
 
